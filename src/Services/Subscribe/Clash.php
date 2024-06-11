@@ -91,15 +91,20 @@ final class Clash extends Base
 
                     break;
                 case 11:
-                    $v2_port = $node_custom_config['offset_port_user'] ??
-                        ($node_custom_config['offset_port_node'] ?? 443);
+                    $v2_port = $node_custom_config['offset_port_user'] ?? ($node_custom_config['offset_port_node'] ?? 443);
                     $security = $node_custom_config['security'] ?? 'none';
-                    $encryption = $node_custom_config['encryption'] ?? 'auto';
+                    $sni = $node_custom_config['sni'] ?? '';
+                    $pbk = $node_custom_config['pbk'] ?? '';
+                    $flow = $node_custom_config['flow'] ?? '';
+                    $transit_address = $node_custom_config['transit_address'] ?? '';
+                    $transit_port = $node_custom_config['transit_port'] ?? '';
                     $network = $node_custom_config['network'] ?? '';
-                    $host = $node_custom_config['header']['request']['headers']['Host'][0] ??
-                        $node_custom_config['host'] ?? '';
-                    $allow_insecure = $node_custom_config['allow_insecure'] ?? false;
-                    $tls = $security === 'tls';
+                    $header = $node_custom_config['header'] ?? ['type' => 'none'];
+                    $header_type = $header['type'] ?? '';
+                    $host = $node_custom_config['header']['request']['headers']['Host'][0] ?? $node_custom_config['host'] ?? '';
+                    $path = $node_custom_config['header']['request']['path'][0] ?? $node_custom_config['path'] ?? '/';
+                    $tls = true;
+
                     // Clash 特定配置
                     $udp = $node_custom_config['udp'] ?? true;
                     $ws_opts = $node_custom_config['ws-opts'] ?? $node_custom_config['ws_opts'] ?? null;
@@ -113,21 +118,19 @@ final class Clash extends Base
 
                     $node = [
                         'name' => $node_raw->name,
-                        'type' => 'vmess',
+                        'type' => 'vless',
                         'server' => $node_raw->server,
                         'port' => (int) $v2_port,
                         'uuid' => $user->uuid,
-                        'alterId' => 0,
-                        'cipher' => $encryption,
+                        'network' => $network,
                         'udp' => (bool) $udp,
                         'tls' => $tls,
-                        'skip-cert-verify' => (bool) $allow_insecure,
-                        'servername' => $host,
-                        'network' => $network,
-                        'ws-opts' => $ws_opts,
-                        'h2-opts' => $h2_opts,
-                        'http-opts' => $http_opts,
-                        'grpc-opts' => $grpc_opts,
+                        'flow' => $flow,
+                        'servername' => $sni,
+                        'reality-opts' => [
+                            'public-key' => $pbk,
+                        ],
+                        'client-fingerprint' => 'chrome',
                     ];
 
                     break;

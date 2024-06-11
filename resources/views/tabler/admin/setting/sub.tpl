@@ -57,7 +57,7 @@
                                         </div>
                                         <div class="form-group mb-3 row">
                                             <label class="form-label col-3 col-form-label">
-                                                Enable Vmess Subscription
+                                                Enable V2ray Subscription
                                             </label>
                                             <div class="col">
                                                 <select id="enable_v2_sub" class="col form-select"

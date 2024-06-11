@@ -84,36 +84,41 @@ final class SingBox extends Base
 
                     break;
                 case 11:
-                    $v2_port = $node_custom_config['offset_port_user'] ??
-                        ($node_custom_config['offset_port_node'] ?? 443);
-                    $transport = ($node_custom_config['network'] ?? '') === 'tcp' ? '' : $node_custom_config['network'];
-                    $host = $node_custom_config['header']['request']['headers']['Host'][0] ??
-                        $node_custom_config['host'] ?? '';
-                    $path = $node_custom_config['header']['request']['path'][0] ?? $node_custom_config['path'] ?? '';
-                    $headers = $node_custom_config['header']['request']['headers'] ?? [];
-                    $service_name = $node_custom_config['servicename'] ?? '';
+                    $v2_port = $node_custom_config['offset_port_user'] ?? ($node_custom_config['offset_port_node'] ?? 443);
+                    $security = $node_custom_config['security'] ?? 'none';
+                    $sni = $node_custom_config['sni'] ?? '';
+                    $pbk = $node_custom_config['pbk'] ?? '';
+                    $flow = $node_custom_config['flow'] ?? '';
+                    $transit_address = $node_custom_config['transit_address'] ?? '';
+                    $transit_port = $node_custom_config['transit_port'] ?? '';
+                    $network = $node_custom_config['network'] ?? '';
+                    $header = $node_custom_config['header'] ?? ['type' => 'none'];
+                    $header_type = $header['type'] ?? '';
+                    $host = $node_custom_config['header']['request']['headers']['Host'][0] ?? $node_custom_config['host'] ?? '';
+                    $path = $node_custom_config['header']['request']['path'][0] ?? $node_custom_config['path'] ?? '/';
 
                     $node = [
-                        'type' => 'vmess',
+                        'type' => 'vless',
                         'tag' => $node_raw->name,
                         'server' => $node_raw->server,
                         'server_port' => (int) $v2_port,
                         'uuid' => $user->uuid,
-                        'security' => 'auto',
-                        'alter_id' => 0,
+                        'flow' => $flow,
                         'tls' => [
-                            'server_name' => $host,
-                        ],
-                        'transport' => [
-                            'type' => $transport,
-                            'path' => $path,
-                            'headers' => $headers,
-                            'service_name' => $service_name,
+                            'enabled' => true,
+                            'server_name' => $sni,
+                            'utls' => [
+                                'enabled' => true,
+                                'fingerprint' => 'chrome',
+                            ],
+                            'reality' => [
+                                'enabled' => true,
+                                 'public_key' => $pbk,
+                            ],
                         ],
                     ];
 
                     $node['tls'] = array_filter($node['tls']);
-                    $node['transport'] = array_filter($node['transport']);
 
                     break;
                 case 14:

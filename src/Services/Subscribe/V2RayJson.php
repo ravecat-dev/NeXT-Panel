@@ -72,7 +72,7 @@ final class V2RayJson extends Base
                     $meek_url = $node_custom_config['meek_url'] ?? '';
 
                     $node = [
-                        'protocol' => 'vmess',
+                        'protocol' => 'V2Ray',
                         'settings' => [
                             'address' => $node_raw->server,
                             'port' => (int) $v2_port,
