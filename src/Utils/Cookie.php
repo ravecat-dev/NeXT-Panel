@@ -6,7 +6,6 @@ namespace App\Utils;
 
 final class Cookie
 {
-
     public static function set(array $arg, int $time): void
     {
         $developmentMode = self::isDevelopmentMode();
@@ -27,6 +26,7 @@ final class Cookie
     {
         return $_COOKIE[$key] ?? '';
     }
+
     private static function isDevelopmentMode(): bool
     {
         return ($_ENV['debug'] || str_contains($_ENV['baseUrl'], '.test')) && str_contains($_ENV['baseUrl'], 'http://');

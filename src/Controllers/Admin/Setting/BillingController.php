@@ -42,8 +42,8 @@ final class BillingController extends BaseController
             $this->view()
                 ->assign('update_field', $this->update_field)
                 ->assign('settings', $this->settings)
-                ->assign('payment_gateways', self::returnGatewaysList())
-                ->assign('active_payment_gateway', self::returnActiveGateways())
+                ->assign('payment_gateways', $this->returnGatewaysList())
+                ->assign('active_payment_gateway', $this->returnActiveGateways())
                 ->fetch('admin/setting/billing.tpl')
         );
     }
@@ -52,7 +52,7 @@ final class BillingController extends BaseController
     {
         $gateway_in_use = [];
 
-        foreach (self::returnGatewaysList() as $value) {
+        foreach ($this->returnGatewaysList() as $value) {
             $payment_enable = $request->getParam($value);
 
             if ($payment_enable === 'true') {
